@@ -50,7 +50,7 @@ class StoredSession(session.DropboxSession):
         self.delete_creds()
         session.DropboxSession.unlink(self)
 
-class MyStat(fuse.Stat):
+class FileStat(fuse.Stat):
     def __init__(self):
         self.st_mode = 0
         self.st_ino = 0
@@ -77,7 +77,7 @@ class DboxFuse(Fuse):
                 exit(1)
 
     def getattr(self, path):
-        st = MyStat()
+        st = FileStat()
         if path == '/':
             st.st_mode = stat.S_IFDIR | 0755
             st.st_nlink = 2
