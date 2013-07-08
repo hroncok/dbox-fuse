@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, stat, errno, locale
+import os, stat, errno, locale, time
 import fuse
 from fuse import Fuse
 from dropbox import client, rest, session
@@ -24,7 +24,6 @@ class StoredSession(session.DropboxSession):
         try:
             stored_creds = open(TOKEN_FILE).read()
             self.set_token(*stored_creds.split('|'))
-            print "[loaded access token]"
         except IOError:
             pass # don't worry if it's not there
 
@@ -82,9 +81,18 @@ class DboxFuse(Fuse):
             st.st_mode = stat.S_IFDIR | 0755
             st.st_nlink = 2
         else:
-            st.st_mode = stat.S_IFREG | 0444
-            st.st_nlink = 1
-            st.st_size = 10
+            try:
+                resp = self.api_client.metadata(path,list=False)
+            except rest.ErrorResponse:
+                return st
+            if resp['is_dir']:
+                st.st_mode = stat.S_IFDIR | 0755
+                st.st_nlink = 2
+            else:
+                st.st_mode = stat.S_IFREG | 0644
+                st.st_nlink = 1
+                st.st_size = resp['bytes']
+                st.st_mtime = self.st_atime = self.st_ctime = float(time.strftime('%s',time.strptime(resp['modified'][5:-6],'%d %b %Y %H:%M:%S')))
         return st
 
     def readdir(self, path, offset):
@@ -95,11 +103,8 @@ class DboxFuse(Fuse):
                 encoding = locale.getdefaultlocale()[1]
                 yield fuse.Direntry(name.encode(encoding))
 
-    def open(self, path, flags):
-        return -errno.EACCES
-
     def read(self, path, size, offset):
-        return -errno.EACCES
+        return ''
 
 if __name__ == '__main__':
     usage="""
