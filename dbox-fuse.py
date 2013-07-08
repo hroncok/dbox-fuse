@@ -104,7 +104,8 @@ class DboxFuse(Fuse):
                 yield fuse.Direntry(name.encode(encoding))
 
     def read(self, path, size, offset):
-        return ''
+        f = self.api_client.get_file(path)
+        return f.read()[offset:offset+size]
 
 if __name__ == '__main__':
     usage="""
