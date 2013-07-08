@@ -1,0 +1,22 @@
+Copyright (c) 2013, Miro Hrončok <miro@hroncok.cz>
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+Using some parts of code examples from Dropbox API Python SDK, which is licensed MIT (without any copyright notice, I suppose Dropbox, Inc.).
+
+Base skeleton taken from Hello World example from Fuse Python, licensed under GNU LGPLv2:
+
+Copyright (C) 2006  Andrew Straw  <strawman@astraw.com>
+
+This program can be distributed under the terms of the GNU LGPL.
+
+As well as xmp example from the same project:
+
+Copyright (C) 2001  Jeff Epler  <jepler@unpythonic.dhs.org>
+Copyright (C) 2006  Csaba Henk  <csaba.henk@creo.hu>
+
+This program can be distributed under the terms of the GNU LGPL.
+
+I believe the main skeleton I used should not be considered as derivative work, but if you disagree, contact me.
