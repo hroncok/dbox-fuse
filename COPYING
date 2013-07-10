@@ -12,11 +12,6 @@ Copyright (C) 2006  Andrew Straw  <strawman@astraw.com>
 
 This program can be distributed under the terms of the GNU LGPL.
 
-As well as xmp example from the same project:
+I got the permission from Andrew Straw:
 
-Copyright (C) 2001  Jeff Epler  <jepler@unpythonic.dhs.org>
-Copyright (C) 2006  Csaba Henk  <csaba.henk@creo.hu>
-
-This program can be distributed under the terms of the GNU LGPL.
-
-I believe the main skeleton I used should not be considered as derivative work, but if you disagree, contact me.
+I hereby license any work I did on my hello world fuse-python code as the MIT-like ISC license.
