@@ -3,6 +3,7 @@ import os, stat, errno, locale, time
 import fuse
 from fuse import Fuse
 from dropbox import client, rest, session
+from memoized import memoized
 
 if not hasattr(fuse, '__version__'):
     raise RuntimeError, \
@@ -75,6 +76,7 @@ class DboxFuse(Fuse):
                 print('Error: '+e)
                 exit(1)
 
+    @memoized
     def getattr(self, path):
         st = FileStat()
         if path == '/':
@@ -95,6 +97,7 @@ class DboxFuse(Fuse):
                 st.st_mtime = self.st_atime = self.st_ctime = float(time.strftime('%s',time.strptime(resp['modified'][5:-6],'%d %b %Y %H:%M:%S')))
         return st
 
+    @memoized
     def readdir(self, path, offset):
         resp = self.api_client.metadata(path)
         if 'contents' in resp:
