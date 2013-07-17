@@ -97,7 +97,6 @@ class DboxFuse(Fuse):
                 st.st_mtime = self.st_atime = self.st_ctime = float(time.strftime('%s',time.strptime(resp['modified'][5:-6],'%d %b %Y %H:%M:%S')))
         return st
 
-    @memoized
     def readdir(self, path, offset):
         resp = self.api_client.metadata(path)
         if 'contents' in resp:
