@@ -1,1 +1,3 @@
 _login.*
+*.pyc
+*.pyo
