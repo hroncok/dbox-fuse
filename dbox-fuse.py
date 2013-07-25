@@ -13,9 +13,11 @@ fuse.fuse_python_api = (0, 2)
 
 version = '0.0.1'
 
-from _login import *
-#APP_KEY = 'foo'
-#APP_SECRET = 'bar'
+try:
+    from _login import APP_KEY, APP_SECRET
+except ImportError:
+    print('Specify your APP_KEY & APP_SECRET in _login.py\nSee README.md for more information how to obtain it.')
+    exit(1)
 
 TOKEN_FILE = os.path.expanduser('~/.dbox-fuse-token')
 
