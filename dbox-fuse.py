@@ -3,11 +3,11 @@ import os, stat, errno, locale, time
 import fuse
 from fuse import Fuse
 from dropbox import client, rest, session
-from memoized import memoized
+from memoized import *
 
 if not hasattr(fuse, '__version__'):
     raise RuntimeError, \
-        'your fuse-py doesn't know of fuse.__version__, probably it's too old.'
+        '''your fuse-py doesn't know of fuse.__version__, probably it's too old.'''
 
 fuse.fuse_python_api = (0, 2)
 
@@ -40,7 +40,7 @@ class StoredSession(session.DropboxSession):
         request_token = self.obtain_request_token()
         url = self.build_authorize_url(request_token)
         print('url: '+url)
-        print('Please authorize in the browser. After you're done, press enter.')
+        print('Please authorize in the browser. After you\'re done, press enter.')
         raw_input()
 
         self.obtain_access_token(request_token)
@@ -97,6 +97,7 @@ class DboxFuse(Fuse):
                 st.st_mtime = self.st_atime = self.st_ctime = float(time.strftime('%s',time.strptime(resp['modified'][5:-6],'%d %b %Y %H:%M:%S')))
         return st
 
+    @memoyield
     def readdir(self, path, offset):
         resp = self.api_client.metadata(path)
         if 'contents' in resp:
