@@ -7,11 +7,11 @@ from memoized import memoized
 
 if not hasattr(fuse, '__version__'):
     raise RuntimeError, \
-        "your fuse-py doesn't know of fuse.__version__, probably it's too old."
+        'your fuse-py doesn't know of fuse.__version__, probably it's too old.'
 
 fuse.fuse_python_api = (0, 2)
 
-version = "0.0.1"
+version = '0.0.1'
 
 from _login import *
 #APP_KEY = 'foo'
@@ -20,7 +20,7 @@ from _login import *
 TOKEN_FILE = os.path.expanduser('~/.dbox-fuse-token')
 
 class StoredSession(session.DropboxSession):
-    """a wrapper around DropboxSession that stores a token to a file on disk"""
+    '''a wrapper around DropboxSession that stores a token to a file on disk'''
     def load_creds(self):
         try:
             stored_creds = open(TOKEN_FILE).read()
@@ -30,7 +30,7 @@ class StoredSession(session.DropboxSession):
 
     def write_creds(self, token):
         f = open(TOKEN_FILE, 'w')
-        f.write("|".join([token.key, token.secret]))
+        f.write('|'.join([token.key, token.secret]))
         f.close()
 
     def delete_creds(self):
@@ -39,8 +39,8 @@ class StoredSession(session.DropboxSession):
     def link(self):
         request_token = self.obtain_request_token()
         url = self.build_authorize_url(request_token)
-        print("url: "+url)
-        print("Please authorize in the browser. After you're done, press enter.")
+        print('url: '+url)
+        print('Please authorize in the browser. After you're done, press enter.')
         raw_input()
 
         self.obtain_access_token(request_token)
@@ -110,12 +110,12 @@ class DboxFuse(Fuse):
         return f.read()[offset:offset+size]
 
 if __name__ == '__main__':
-    usage="""
+    usage='''
 Dropbox fuse mount
 
-""" + Fuse.fusage
+''' + Fuse.fusage
     try:
-        server = DboxFuse(version="%prog " + version,
+        server = DboxFuse(version='%prog ' + version,
                          usage=usage,
                          dash_s_do='setsingle')
 
