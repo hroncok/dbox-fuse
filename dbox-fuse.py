@@ -96,7 +96,7 @@ class DboxFuse(Fuse):
                 st.st_mode = stat.S_IFREG | 0644
                 st.st_nlink = 1
                 st.st_size = resp['bytes']
-                st.st_mtime = self.st_atime = self.st_ctime = float(time.strftime('%s',time.strptime(resp['modified'][5:-6],'%d %b %Y %H:%M:%S')))
+            st.st_mtime = self.st_atime = self.st_ctime = float(time.strftime('%s',time.strptime(resp['modified'][5:-6],'%d %b %Y %H:%M:%S')))
         return st
 
     @memoyield
