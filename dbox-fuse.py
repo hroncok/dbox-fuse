@@ -4,6 +4,7 @@ import fuse
 from fuse import Fuse
 from dropbox import client, rest, session
 from memoized import *
+from datetime import datetime, timedelta
 
 if not hasattr(fuse, '__version__'):
     raise RuntimeError, \
@@ -85,6 +86,7 @@ class DboxFuse(Fuse):
             except rest.ErrorResponse, e:
                 print('Error: '+e)
                 exit(1)
+        self.files = {}
 
     @memoized
     def getattr(self, path):
@@ -121,9 +123,12 @@ class DboxFuse(Fuse):
     def read(self, path, size, offset):
         '''Get contents of the file.
         FUSE supports size, offset, but not Dropbox,
-        so this will download it all and serve just requested part'''
-        f = self.api_client.get_file(path)
-        return f.read()[offset:offset+size]
+        so this will download it all and serve just requested part.
+        This also keeps the file in memory for some time but it is
+        not very clever and definitely needs better approach.'''
+        if not path in self.files or self.files[path][0] < datetime.now()-timedelta(seconds=10):
+            self.files[path] = datetime.now(), self.api_client.get_file(path).read()
+        return self.files[path][1][offset:offset+size]
 
 if __name__ == '__main__':
     usage='''
