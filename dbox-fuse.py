@@ -59,8 +59,8 @@ class FileStat(fuse.Stat):
         self.st_mode = 0
         self.st_ino = 0
         self.st_dev = 0
-        self.st_nlink = 2
-        self.st_size = 4096
+        self.st_nlink = 0
+        self.st_size = 0
         self.st_atime = 0
         self.st_mtime = 0
         self.st_ctime = 0
@@ -90,6 +90,8 @@ class DboxFuse(Fuse):
                 return st
             if resp['is_dir']:
                 st.st_mode = stat.S_IFDIR | 0755
+                st.st_nlink = 2
+                st.st_size = 4096
             else:
                 st.st_mode = stat.S_IFREG | 0644
                 st.st_nlink = 1
