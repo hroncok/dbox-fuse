@@ -22,8 +22,9 @@ except ImportError:
 TOKEN_FILE = os.path.expanduser('~/.dbox-fuse-token')
 
 class StoredSession(session.DropboxSession):
-    '''a wrapper around DropboxSession that stores a token to a file on disk'''
+    '''A wrapper around DropboxSession that stores a token to a file on disk'''
     def load_creds(self):
+        '''Loads login credinals from TOKEN_FILE'''
         try:
             stored_creds = open(TOKEN_FILE).read()
             self.set_token(*stored_creds.split('|'))
@@ -31,14 +32,17 @@ class StoredSession(session.DropboxSession):
             pass # don't worry if it's not there
 
     def write_creds(self, token):
+        '''Writes login credinals to TOKEN_FILE'''
         f = open(TOKEN_FILE, 'w')
         f.write('|'.join([token.key, token.secret]))
         f.close()
 
     def delete_creds(self):
+        '''Deletes login credinals from TOKEN_FILE'''
         os.unlink(TOKEN_FILE)
 
     def link(self):
+        '''Ask user to authorize in the browser and gets the token'''
         request_token = self.obtain_request_token()
         url = self.build_authorize_url(request_token)
         print('url: '+url)
@@ -49,10 +53,12 @@ class StoredSession(session.DropboxSession):
         self.write_creds(self.token)
 
     def unlink(self):
+        '''Removes token from file and unlinks it from Dropbox'''
         self.delete_creds()
         session.DropboxSession.unlink(self)
 
 class FileStat(fuse.Stat):
+    '''A class representing file metadata'''
     st_uid = os.getuid()
     st_gid = os.getgid()
     def __init__(self):
@@ -66,7 +72,9 @@ class FileStat(fuse.Stat):
         self.st_ctime = 0
 
 class DboxFuse(Fuse):
+    '''Dropbox FUSE implementation'''
     def __init__(self, *args, **kw):
+        '''When initializing, connect to Dropbox'''
         Fuse.__init__(self, *args, **kw)
         self.sess = StoredSession(APP_KEY, APP_SECRET, access_type='dropbox')
         self.api_client = client.DropboxClient(self.sess)
@@ -80,6 +88,7 @@ class DboxFuse(Fuse):
 
     @memoized
     def getattr(self, path):
+        '''Get metadata about file'''
         st = FileStat()
         if path == '/':
             st.st_mode = stat.S_IFDIR | 0755
@@ -101,6 +110,7 @@ class DboxFuse(Fuse):
 
     @memoyield
     def readdir(self, path, offset):
+        '''List contents of the directory'''
         resp = self.api_client.metadata(path)
         if 'contents' in resp:
             for f in resp['contents'] + [{'path': '.'}, {'path': '..'}]:
@@ -109,6 +119,9 @@ class DboxFuse(Fuse):
                 yield fuse.Direntry(name.encode(encoding))
 
     def read(self, path, size, offset):
+        '''Get contents of the file.
+        FUSE supports size, offset, but not Dropbox,
+        so this will download it all and serve just requested part'''
         f = self.api_client.get_file(path)
         return f.read()[offset:offset+size]
 
