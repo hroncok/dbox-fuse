@@ -53,15 +53,13 @@ class StoredSession(session.DropboxSession):
         session.DropboxSession.unlink(self)
 
 class FileStat(fuse.Stat):
-    uid = os.getuid()
-    gid = os.getgid()
+    st_uid = os.getuid()
+    st_gid = os.getgid()
     def __init__(self):
         self.st_mode = 0
         self.st_ino = 0
         self.st_dev = 0
         self.st_nlink = 0
-        self.st_uid = FileStat.uid
-        self.st_gid = FileStat.gid
         self.st_size = 0
         self.st_atime = 0
         self.st_mtime = 0
